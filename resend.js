@@ -1,6 +1,6 @@
 module.exports.config = {
 	name: "resend",
-	version: "1.1.2",
+	version: "1.1.4",
 	hasPermssion: 1,
 	credits: "Thọ",
 	description: "Thì là resend đó",
