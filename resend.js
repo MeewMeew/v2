@@ -15,7 +15,7 @@ module.exports.event = async function ({ event, api, client, Currencies }) {
   let fs = require("fs-extra");
   if (!client.resendMessage) client.resendMessage = new Array();
   if (!fs.existsSync(__dirname + "/cache/resend.json")) {
-  fs.writeFileSync(__dirname + "/cache/resend.json", JSON.stringify({}), null,8);
+  fs.writeFileSync(__dirname + "/cache/resend.json", JSON.stringify({}, null,8));
 }
  
   var resend = JSON.parse(fs.readFileSync(__dirname + "/cache/resend.json"))
@@ -29,7 +29,7 @@ module.exports.event = async function ({ event, api, client, Currencies }) {
 					
      resend = JSON.parse(fs.readFileSync(__dirname + "/cache/resend.json"))
   if(!resend) return;
-       if (resend[event.threadID.toString()]) {
+       if (resend[event.threadID]) {
 				let getThread = resend[event.threadID.toString()]["on"];
 				if (getThread == false) return;
        }
