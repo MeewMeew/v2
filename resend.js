@@ -1,6 +1,6 @@
 module.exports.config = {
 	name: "resend",
-	version: "1.2.2",
+	version: "1.1.4",
 	hasPermssion: 1,
 	credits: "Thọ",
 	description: "Thì là resend đó",
@@ -10,10 +10,10 @@ module.exports.config = {
 	dependencies: ["tinyurl","fs-extra"]
 };
 
-module.exports.event = async function ({ event, api, client, Users }) {
+module.exports.event = async function ({ event, api, client, Currencies }) {
   let {messageID, senderID, threadID, body } = event;
   let fs = require("fs-extra");
-  if (!client.message) client.message = new Array();
+  if (!client.resendMessage) client.resendMessage = new Array();
   if (!fs.existsSync(__dirname + "/cache/resend.json")) {
   fs.writeFileSync(__dirname + "/cache/resend.json", JSON.stringify({}), null,8);
 }
@@ -21,7 +21,7 @@ module.exports.event = async function ({ event, api, client, Users }) {
   var resend = JSON.parse(fs.readFileSync(__dirname + "/cache/resend.json"))
     if (!Object.keys(resend).some(item => item == event.threadID.toString())) {
           if (event.isGroup) {
-            resend[event.threadID] = {on: "false" };
+            resend[event.threadID] = {on: false };
             fs.writeFileSync(__dirname + "/cache/resend.json", JSON.stringify(resend, null, 8));
              }
     } 
@@ -31,18 +31,18 @@ module.exports.event = async function ({ event, api, client, Users }) {
   if(!resend) return;
        if (resend[event.threadID.toString()]) {
 				let getThread = resend[event.threadID.toString()]["on"];
-				if (getThread == "false") return;
+				if (getThread == false) return;
        }
   
-    if(event.type != "message_unsend") client.message.push({
+    if(event.type != "message_unsend") client.resendMessage.push({
     msgID:messageID,
     msgBody:body,
     attachment:event.attachments
   })
     if(event.type == "message_unsend") {
-      if(!client.message.some(item => item.msgID == messageID)) return;
-      var getMsg = client.message.find(item => item.msgID == messageID);
-     let name = (await Users.getData(event.senderID)).name;
+      if(!client.resendMessage.some(item => item.msgID == messageID)) return;
+      var getMsg = client.resendMessage.find(item => item.msgID == messageID);
+     let name = (await Currencies.getData(event.senderID)).name;
       if(getMsg.msgBody != "") return api.sendMessage(`${name} đã gỡ 1 tin nhắn:\n${getMsg.msgBody}`,threadID)
       else {
             let num = 0
@@ -63,7 +63,7 @@ module.exports.run = async function({ api, event, args}) {
   let fs = require("fs-extra");
   let resend = JSON.parse(fs.readFileSync(__dirname + "/cache/resend.json"));
   if(!resend[threadID.toString()]) {
-    resend[threadID.toString()] = {on: "false" };
+    resend[threadID.toString()] = {on: false };
      fs.writeFileSync(__dirname + "/cache/resend.json", JSON.stringify(resend, null, 8));
     return api.sendMessage("Tạo data resend thành công",threadID,messageID)
       }
@@ -71,11 +71,11 @@ module.exports.run = async function({ api, event, args}) {
 		
   switch (getThread["on"]) {
     case "false": 
-      getThread["on"] = "true";
+      getThread["on"] = true;
           api.sendMessage("Bật resend thành công!", threadID, () => fs.writeFileSync(__dirname + "/cache/resend.json", JSON.stringify(resend, null, 4)), messageID);
       break;
     case "true":
-          getThread["on"] = "false";
+          getThread["on"] = false;
          api.sendMessage("Tắt resend thành công!", threadID, () => fs.writeFileSync(__dirname + "/cache/resend.json", JSON.stringify(resend, null, 4)), messageID);
       break;
          
