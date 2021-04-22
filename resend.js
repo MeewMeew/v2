@@ -21,7 +21,7 @@ module.exports.event = async function ({ event, api, client }) {
   var resend = JSON.parse(fs.readFileSync(__dirname + "/cache/resend.json"))
     if (!Object.keys(resend).some(item => item == event.threadID.toString())) {
           if (event.isGroup) {
-            resend[event.threadID] = {on: false };
+            resend[event.threadID] = {on: "false" };
             fs.writeFileSync(__dirname + "/cache/resend.json", JSON.stringify(resend, null, 8));
              }
     } 
@@ -31,7 +31,7 @@ module.exports.event = async function ({ event, api, client }) {
   if(!resend) return;
        if (resend[event.threadID.toString()]) {
 				let getThread = resend[event.threadID.toString()]["on"];
-				if (getThread == false) return;
+				if (getThread == "false") return;
        }
   
     if(event.type != "message_unsend") client.message.push({
@@ -63,19 +63,19 @@ module.exports.run = async function({ api, event, args}) {
   let fs = require("fs-extra");
   let resend = JSON.parse(fs.readFileSync(__dirname + "/cache/resend.json"));
   if(!resend[threadID.toString()]) {
-    resend[threadID.toString()] = {on: false };
+    resend[threadID.toString()] = {on: "false" };
      fs.writeFileSync(__dirname + "/cache/resend.json", JSON.stringify(resend, null, 8));
     return api.sendMessage("Tạo data resend thành công",threadID,messageID)
       }
   let getThread = resend[threadID.toString()]["on"];
 		
   switch (getThread) {
-    case false: 
-      getThread = true;
+    case "false": 
+      getThread = "true";
           api.sendMessage("Bật resend thành công!", threadID, () => fs.writeFileSync(__dirname + "/cache/resend.json", JSON.stringify(resend, null, 4)), messageID);
       break;
-    case true:
-          getThread = false;
+    case "true":
+          getThread = "false";
          api.sendMessage("Tắt resend thành công!", threadID, () => fs.writeFileSync(__dirname + "/cache/resend.json", JSON.stringify(resend, null, 4)), messageID);
       break;
          
