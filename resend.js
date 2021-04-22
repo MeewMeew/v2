@@ -1,6 +1,6 @@
 module.exports.config = {
 	name: "resend",
-	version: "1.2.1",
+	version: "1.2.2",
 	hasPermssion: 1,
 	credits: "Thọ",
 	description: "Thì là resend đó",
@@ -10,7 +10,7 @@ module.exports.config = {
 	dependencies: ["tinyurl","fs-extra"]
 };
 
-module.exports.event = async function ({ event, api, client, Currentcies }) {
+module.exports.event = async function ({ event, api, client, Currencies }) {
   let {messageID, senderID, threadID, body } = event;
   let fs = require("fs-extra");
   if (!client.message) client.message = new Array();
@@ -42,7 +42,7 @@ module.exports.event = async function ({ event, api, client, Currentcies }) {
     if(event.type == "message_unsend") {
       if(!client.message.some(item => item.msgID == messageID)) return;
       var getMsg = client.message.find(item => item.msgID == messageID);
-     let name = (await Currentcies.getData(event.senderID)).name;
+     let name = (await Currencies.getData(event.senderID)).name;
       if(getMsg.msgBody != "") return api.sendMessage(`${name} đã gỡ 1 tin nhắn:\n${getMsg.msgBody}`,threadID)
       else {
             let num = 0
