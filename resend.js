@@ -70,11 +70,11 @@ module.exports.run = async function({ api, event, args}) {
   let getThread = resend[threadID.toString()];
 		
   switch (getThread["on"]) {
-    case "false": 
+    case false: 
       getThread["on"] = true;
           api.sendMessage("Bật resend thành công!", threadID, () => fs.writeFileSync(__dirname + "/cache/resend.json", JSON.stringify(resend, null, 4)), messageID);
       break;
-    case "true":
+    case true:
           getThread["on"] = false;
          api.sendMessage("Tắt resend thành công!", threadID, () => fs.writeFileSync(__dirname + "/cache/resend.json", JSON.stringify(resend, null, 4)), messageID);
       break;
