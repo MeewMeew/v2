@@ -67,15 +67,15 @@ module.exports.run = async function({ api, event, args}) {
      fs.writeFileSync(__dirname + "/cache/resend.json", JSON.stringify(resend, null, 8));
     return api.sendMessage("Tạo data resend thành công",threadID,messageID)
       }
-  let getThread = resend[threadID.toString()]["on"];
+  let getThread = resend[threadID.toString()];
 		
-  switch (getThread) {
+  switch (getThread["on"]) {
     case "false": 
-      getThread = "true";
+      getThread["on"] = "true";
           api.sendMessage("Bật resend thành công!", threadID, () => fs.writeFileSync(__dirname + "/cache/resend.json", JSON.stringify(resend, null, 4)), messageID);
       break;
     case "true":
-          getThread = "false";
+          getThread["on"] = "false";
          api.sendMessage("Tắt resend thành công!", threadID, () => fs.writeFileSync(__dirname + "/cache/resend.json", JSON.stringify(resend, null, 4)), messageID);
       break;
          
