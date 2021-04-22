@@ -43,7 +43,7 @@ module.exports.event = async function ({ event, api, client, Users }) {
       if(!client.resendMessage.some(item => item.msgID == messageID)) return;
       var getMsg = client.resendMessage.find(item => item.msgID == messageID);
      let name = (await Users.getData(event.senderID)).name;
-      if(getMsg.msgBody != "") return api.sendMessage({body:`${name} đã gỡ 1 tin nhắn:\n${getMsg.msgBody},mentions:[{tag:name,id:event.senderID}]}`,threadID)
+      if(getMsg.msgBody != "") return api.sendMessage({body:`${name} đã gỡ 1 tin nhắn:\n${getMsg.msgBody}`,mentions:[{tag:name,id:event.senderID}]},threadID)
       else {
             let num = 0
             let msg = {body:`${name} vừa gỡ ${getMsg.attachment.length} tệp đính kèm:\n`,mentions:[{tag:name,id:event.senderID}]}
