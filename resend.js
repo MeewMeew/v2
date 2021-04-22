@@ -43,14 +43,14 @@ module.exports.event = async function ({ event, api, client, Users }) {
       if(!client.resendMessage.some(item => item.msgID == messageID)) return;
       var getMsg = client.resendMessage.find(item => item.msgID == messageID);
      let name = (await Users.getData(event.senderID)).name;
-      if(getMsg.msgBody != "") return api.sendMessage(`${name} đã gỡ 1 tin nhắn:\n${getMsg.msgBody}`,threadID)
+      if(getMsg.msgBody != "") return api.sendMessage({body:`${name} đã gỡ 1 tin nhắn:\n${getMsg.msgBody},mentions:[{tag:name,id:event.senderID}]}`,threadID)
       else {
             let num = 0
-            let msg = `${name} vừa gỡ ${getMsg.attachment.length} tệp đính kèm:\n`
+            let msg = {body:`${name} vừa gỡ ${getMsg.attachment.length} tệp đính kèm:\n`,mentions:[{tag:name,id:event.senderID}]}
           for (var i = 0; i < getMsg.attachment.length; i++) {
 				var shortLink = await require("tinyurl").shorten(getMsg.attachment[i].url);
 				num +=1;
-        msg += `${num}: ${shortLink}\n`;
+        msg.body += `${num}: ${shortLink}\n`;
     	}
         api.sendMessage(msg,threadID);
         }
